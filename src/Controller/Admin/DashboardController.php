@@ -50,7 +50,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
         yield MenuItem::linkToCrud('Users', 'fas fa-user', User::class);
         yield MenuItem::linkToCrud('Tasks', 'fas fa-tasks', Task::class);
-        yield MenuItem::linkToUrl('Homepage', 'fas fa-home', $this->generateUrl('app_login'));
+        yield MenuItem::linkToUrl('Homepage', 'fas fa-home', $this->generateUrl('app_homepage'));
     }
 
     public function configureActions(): Actions
