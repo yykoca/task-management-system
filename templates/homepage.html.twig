@@ -16,15 +16,20 @@
         </div>
     </div>
     <div class="row">
-        {% for question in tasks %}
+        {% for task in tasks %}
         <div class="col-12 mb-3">
             <div style="box-shadow: 2px 3px 9px 4px rgba(0,0,0,0.04);">
                 <div class="q-container p-4">
                     <div class="row">
                         <div class="col">
-                            <h2>{{ question.title }}</h2>
+                            <h2>{{ task.title }}</h2>
+                            {% if app.user %}
+                                <div class="mb-3">
+                                    <a href="{{ path('task_assign_user', {'id': task.id}) }}">Assign yourself</a>
+                                </div>
+                            {% endif %}
                             <div class="q-display p-3">
-                                <p class="pt-4">{{ question.description }}</p>
+                                <p class="pt-4">{{ task.description }}</p>
                             </div>
                         </div>
                     </div>
@@ -35,4 +40,3 @@
     </div>
 </div>
 {% endblock %}
-

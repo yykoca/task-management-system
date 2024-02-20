@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use App\Entity\Task;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\CurrentUser;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/tasks')]
@@ -28,6 +30,19 @@ class TaskController extends AbstractController
             ];
         }
         return $this->json($formattedTasks);
+    }
+
+    #[Route('/assign-user', name: 'task_assign_user')]
+    #[IsGranted('ROLE_USER', message: 'You are not allowed to access this route.')]
+    public function assign_user(#[CurrentUser] ?User $user, Request $request, EntityManagerInterface $entityManager): JsonResponse
+    {
+        $id = $request->query->get('id');
+        
+        $task = $entityManager->getRepository(Task::class)->findOneBy(['id' => $id]);
+        $task->addUser($user);
+        
+        $entityManager->flush();
+        return $this->json(['message' => 'Task added to user successfully']);
     }
 
     #[Route('/new', name: 'task_new', methods: ['POST'])]
