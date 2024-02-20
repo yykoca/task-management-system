@@ -6,23 +6,41 @@ use App\Entity\Task;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
+    private $passwordHasher;
+
+    public function __construct(UserPasswordHasherInterface $passwordHasher)
+    {
+        $this->passwordHasher = $passwordHasher;
+    }
+
     public function load(ObjectManager $manager): void
     {
         $admin = new User();
         $admin->setName("admin");
         $admin->setEmail("admin@admin");
         $admin->setRoles(["ROLE_ADMIN"]);
-        $admin->setPassword("$2y$13\$ZxF69.8wt5Qms1EDDi5nhupPvb52dsFRJXqWJUFk1vylxzor4Ioq2");
+        
+        $plaintextPassword = "secret";
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $admin,
+            $plaintextPassword
+        );
+        $admin->setPassword($hashedPassword);
         $manager->persist($admin);
 
         $user = new User();
         $user->setName("user");
         $user->setEmail("user@user");
         $user->setRoles(["ROLE_USER"]);
-        $user->setPassword("$2y$13\$ZxF69.8wt5Qms1EDDi5nhupPvb52dsFRJXqWJUFk1vylxzor4Ioq2");
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $user,
+            $plaintextPassword
+        );
+        $user->setPassword($hashedPassword);
         $manager->persist($user);
 
         $tasks = [
