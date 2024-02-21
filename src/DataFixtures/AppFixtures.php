@@ -43,9 +43,20 @@ class AppFixtures extends Fixture
         $user->setPassword($hashedPassword);
         $manager->persist($user);
 
+        $task1 = new Task();
+        $task1->setTitle('Prepare quarterly report');
+        $task1->setDescription("Compile financial data and generate a detailed report for the last quarter's performance.");
+        $task1->addUser($admin);
+        $manager->persist($task1);
+        
+        
+        $task1 = new Task();
+        $task1->setTitle('Update website content');
+        $task1->setDescription("Review existing content, make necessary revisions, and upload new information to the company's website.");
+        $task1->addUser($user);
+        $manager->persist($task1);
+
         $tasks = [
-            ["title" => "Prepare quarterly report", "description" => "Compile financial data and generate a detailed report for the last quarter's performance."],
-            ["title" => "Update website content", "description" => "Review existing content, make necessary revisions, and upload new information to the company's website."],
             ["title" => "Organize team meeting", "description" => "Schedule a team meeting to discuss project updates, address any concerns, and plan upcoming tasks."],
             ["title" => "Research market trends", "description" => "Conduct thorough market research to identify current trends and gather insights for strategic planning."],
             ["title" => "Resolve customer complaints", "description" => "Investigate customer complaints, provide timely responses, and implement solutions to enhance customer satisfaction."],
