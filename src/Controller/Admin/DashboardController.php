@@ -4,6 +4,8 @@ namespace App\Controller\Admin;
 
 use App\Entity\Task;
 use App\Entity\User;
+use App\Repository\TaskRepository;
+use App\Repository\UserRepository;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
@@ -16,27 +18,25 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class DashboardController extends AbstractDashboardController
 {
+    private UserRepository $userRepository;
+    private TaskRepository $taskRepository;
+
+    public function __construct(UserRepository $userRepository, TaskRepository $taskRepository) {
+        $this->userRepository = $userRepository;
+        $this->taskRepository = $taskRepository;
+    }
+
     #[Route('/admin', name: 'admin')]
     #[IsGranted('ROLE_ADMIN')]
     public function index(): Response
     {
-        // return parent::index();
-
-        // Option 1. You can make your dashboard redirect to some common page of your backend
-        //
-        // $adminUrlGenerator = $this->container->get(AdminUrlGenerator::class);
-        // return $this->redirect($adminUrlGenerator->setController(OneOfYourCrudController::class)->generateUrl());
-
-        // Option 2. You can make your dashboard redirect to different pages depending on the user
-        //
-        // if ('jane' === $this->getUser()->getUsername()) {
-        //     return $this->redirect('...');
-        // }
-
-        // Option 3. You can render some custom template to display a proper dashboard with widgets, etc.
-        // (tip: it's easier if your template extends from @EasyAdmin/page/content.html.twig)
-        //
-        return $this->render('admin/index.html.twig');
+        $usersCount = count($this->userRepository->findAll());
+        $tasksCount = count($this->taskRepository->findAll());
+        
+        return $this->render('admin/index.html.twig', [ 
+            'usersCount' => $usersCount, 
+            'tasksCount' => $tasksCount,
+        ]);
     }
 
     public function configureDashboard(): Dashboard
@@ -47,7 +47,7 @@ class DashboardController extends AbstractDashboardController
 
     public function configureMenuItems(): iterable
     {
-        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
+        yield MenuItem::linkToDashboard('Dashboard', 'fa fa-dashboard');
         yield MenuItem::linkToCrud('Users', 'fas fa-user', User::class);
         yield MenuItem::linkToCrud('Tasks', 'fas fa-tasks', Task::class);
         yield MenuItem::linkToUrl('Homepage', 'fas fa-home', $this->generateUrl('app_homepage'));
