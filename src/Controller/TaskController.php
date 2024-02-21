@@ -23,10 +23,19 @@ class TaskController extends AbstractController
 
         $formattedTasks = [];
         foreach ($tasks as $task) {
+            $users = [];
+            foreach ($task->getUsers() as $user) {
+                $users[] = [
+                    'id' => $user->getId(),
+                    'name' => $user->getName(),
+                ];
+            }
+
             $formattedTasks[] = [
                 'id' => $task->getId(),
                 'title' => $task->getTitle(),
                 'description' => $task->getDescription(),
+                'users' => $users,
             ];
         }
         return $this->json($formattedTasks);
@@ -77,9 +86,18 @@ class TaskController extends AbstractController
     {   
         $task = $entityManager->getRepository(Task::class)->findOneBy(['id' => $task->getId()]);
 
+        $users = [];
+        foreach ($task->getUsers() as $user) {
+            $users[] = [
+                'id' => $user->getId(),
+                'name' => $user->getName(),
+            ];
+        }
+
         return $this->json([
             'title' => $task->getTitle(),
             'description' => $task->getDescription(),
+            'users' => $users,
         ]);
     }
 

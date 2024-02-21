@@ -25,7 +25,16 @@
                             <h2>{{ task.title }}</h2>
                             {% if app.user %}
                                 <div class="mb-3">
-                                    <a href="{{ path('task_assign_user', {'id': task.id}) }}">Assign yourself</a>
+                                    {% if task.users is empty %}
+                                        No one --
+                                    {% endif %}
+                                    {% set assigned = task.users|filter(user => user.id == app.user.id)|length > 0 %}
+                                    {% for user in task.users %}
+                                        {{ user.name }}
+                                    {% endfor %}
+                                    {% if not assigned %}
+                                        <a href="{{ path('task_assign_user', {'id': task.id}) }}">Assign yourself</a>
+                                    {% endif %}
                                 </div>
                             {% endif %}
                             <div class="q-display p-3">
