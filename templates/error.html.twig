@@ -3,7 +3,8 @@
 {% block body %}
 <div class="p-5">
     <div class="container">
-        <h1>Page not found</h1>
+        <h1>Oops! Something went wrong.</h1>
+        <p>{{ exception.message }}</p>
         <p>
             The requested page couldn't be located. Checkout for any URL
             misspelling or <a href="{{ path('app_homepage') }}">return to the homepage</a>.
