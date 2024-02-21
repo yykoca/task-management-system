@@ -55,7 +55,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/new', name: 'task_new', methods: ['POST'])]
-    // #[IsGranted('ROLE_ADMIN', message: 'You are not allowed to access this route.')]
+    #[IsGranted('ROLE_ADMIN', message: 'You are not allowed to access this route.')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $requestData = json_decode($request->getContent(), true);
@@ -102,7 +102,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'task_edit', methods: ['PATCH'])]
-    // #[IsGranted('ROLE_ADMIN', message: 'You are not allowed to access this route.')]
+    #[IsGranted('ROLE_ADMIN', message: 'You are not allowed to access this route.')]
     public function update(Task $task, Request $request, EntityManagerInterface $entityManager): Response
     { 
         try {
@@ -132,7 +132,7 @@ class TaskController extends AbstractController
     }
 
     #[Route('/{id}/delete', name: 'task_delete', methods: ['DELETE'])]
-    // #[IsGranted('ROLE_ADMIN', message: 'You are not allowed to access this route.')]
+    #[IsGranted('ROLE_ADMIN', message: 'You are not allowed to access this route.')]
     public function delete(Task $task, EntityManagerInterface $entityManager): Response
     {
         try {
